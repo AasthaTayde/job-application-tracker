@@ -1,38 +1,33 @@
-export default function Dashboard({ jobs,setJobs }) {//jobs->shows data, setJobs->upadates data
+import JobCard from "../components/JobCard";//Dashboard- logic only, JobCard- UI
+
+export default function Dashboard({ jobs, setJobs }) {
+
   const handleDelete = (index) => {
-    const updatedJobs = jobs.filter((_, i) => i !== index);//create new array and this keeps all items except the one we want to delete, filter() creates new array
-    setJobs(updatedJobs);//replace old jobs with new array
-  };          
-    const handleStatusChange = (index, newStatus) => {
-      const updatedJobs = [...jobs]; // copy array
-      updatedJobs[index].status = newStatus; // update specific job
-      setJobs(updatedJobs); // update state
+    const updatedJobs = jobs.filter((_, i) => i !== index);
+    setJobs(updatedJobs);
+  };
+
+  const handleStatusChange = (index, newStatus) => {
+    const updatedJobs = [...jobs];
+    updatedJobs[index].status = newStatus;
+    setJobs(updatedJobs);
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: "600px", margin: "auto" }}>
       <h1>Dashboard</h1>
 
-      {jobs.length === 0 ? ( //conditional rendering
+      {jobs.length === 0 ? (
         <p>No jobs added yet</p>
       ) : (
-        jobs.map((job, index) => (//loops through all jobs, jobs array, key- special prop to identify each item in a list uniquely, index is position in array
-          <div key={index}>
-            <h3>{job.company}</h3>
-            <p>{job.role}</p>
-            <select
-            value={job.status}
-            onChange={(e) => handleStatusChange(index, e.target.value)}>
-            <option>Applied</option>
-            <option>Interview</option>
-            <option>Offer</option>
-            <option>Rejected</option>
-            </select>
-            <p>{job.date}</p>
-            <button onClick={() => handleDelete(index)}>
-            Delete
-            </button>
-          </div>
+        jobs.map((job, index) => (
+          <JobCard
+            key={index}
+            job={job}
+            index={index}
+            handleDelete={handleDelete}
+            handleStatusChange={handleStatusChange}
+          />
         ))
       )}
     </div>
