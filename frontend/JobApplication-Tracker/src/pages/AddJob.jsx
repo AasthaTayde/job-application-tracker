@@ -1,7 +1,6 @@
 import { useState } from "react";
-
-export default function AddJob() {
-  const [job, setJob] = useState({
+export default function AddJob({ setJobs }) {//setJobs is passed as a prop so that when the form is submitted, the new job is added to the jobs list.
+  const [job, setJob] = useState({//Form state(single job)
     company: "",
     role: "",
     status: "Applied",
@@ -11,7 +10,7 @@ export default function AddJob() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(job);
+    setJobs((prev) => [...prev, job]);
 
     // reset form
     setJob({
