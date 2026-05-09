@@ -1,12 +1,13 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/jobs";
+const API = "http://localhost:5000/api/jobs";
 
-// GET all jobs
-export const getJobs = () => axios.get(API_URL);
+// ✅ IMPORTANT: named export
+export const getJobs = () => axios.get(API);
 
-// POST new job
-export const createJob = (jobData) => axios.post(API_URL, jobData);
+export const addJob = (data) => axios.post(API, data);
 
-// (optional later)
-// export const deleteJob = (id) => axios.delete(`${API_URL}/${id}`);
+export const deleteJob = (id) => axios.delete(`${API}/${id}`);
+
+export const updateJob = (id, data) =>
+  axios.put(`${API}/${id}`, data);

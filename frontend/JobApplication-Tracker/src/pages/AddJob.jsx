@@ -1,24 +1,36 @@
 import { useState } from "react";
-export default function AddJob({ setJobs }) {//setJobs is passed as a prop so that when the form is submitted, the new job is added to the jobs list.
-  const [job, setJob] = useState({//Form state(single job)
+import { addJob } from "../api/jobs";
+
+export default function AddJob({ setJobs }) {
+
+  const [job, setJob] = useState({
     company: "",
     role: "",
     status: "Applied",
     date: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setJobs((prev) => [...prev, job]);
+    try {
+      // 🔥 Send data to backend (MongoDB)
+      const res = await addJob(job);
 
-    // reset form
-    setJob({
-      company: "",
-      role: "",
-      status: "Applied",
-      date: "",
-    });
+      // 🔥 Update frontend state with saved DB response
+      setJobs((prev) => [...prev, res.data]);
+
+      // reset form
+      setJob({
+        company: "",
+        role: "",
+        status: "Applied",
+        date: "",
+      });
+
+    } catch (error) {
+      console.log("Error adding job:", error);
+    }
   };
 
   return (
