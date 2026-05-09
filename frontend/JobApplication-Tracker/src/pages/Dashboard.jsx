@@ -1,56 +1,53 @@
 import { useState } from "react";
 import JobCard from "../components/JobCard";
 
-export default function Dashboard({ jobs, setJobs }) {
+export default function Dashboard({ jobs, setJobs, loading }) {
 
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 
-  //delete function
-  const handleDelete = (index) => {
-    const updatedJobs = jobs.filter((_, i) => i !== index);
+  // 🔥 DELETE using MongoDB id (NOT index)
+  const handleDelete = (id) => {
+    const updatedJobs = jobs.filter((job) => job._id !== id);
     setJobs(updatedJobs);
   };
 
-
-  //update status of the job
-  const handleStatusChange = (index, newStatus) => {
-    const updatedJobs = [...jobs];
-    updatedJobs[index].status = newStatus;
+  // 🔥 UPDATE status using id
+  const handleStatusChange = (id, newStatus) => {
+    const updatedJobs = jobs.map((job) =>
+      job._id === id ? { ...job, status: newStatus } : job
+    );
     setJobs(updatedJobs);
   };
 
-  //to search job(matches text)
-  const getSearchedJobs = () => {//() no input needed, function uses external data(uses global state directly)
-    return jobs.filter((job) =>// .filter() used to loop through each item of array jobs[], job=current item from the array and then .filter() returns new array
-      job.company.toLowerCase().includes(search.toLowerCase())//condition check and build new array (job) and return result of .filter
+  // 🔍 SEARCH
+  const getSearchedJobs = () => {
+    return jobs.filter((job) =>
+      job.company.toLowerCase().includes(search.toLowerCase())
     );
   };
 
-  //to filter jobs(matches category)
-  const getFilteredJobs = (jobList) => {//(something), function needs input(takes i/p dynamically)
+  // 🎯 FILTER
+  const getFilteredJobs = (jobList) => {
     return jobList.filter((job) => {
       return filter === "All" || job.status === filter;
     });
   };
 
-  //get combined result after searching by company name then filter by status
   const processedJobs = getFilteredJobs(getSearchedJobs());
 
-  const getJobsByStatus = (status) => { //grouping of jobs on the basis of status
-    return processedJobs.filter(job => job.status === status);
+  const getJobsByStatus = (status) => {
+    return processedJobs.filter((job) => job.status === status);
   };
 
-  //UI template so it can be reused again
   const renderSection = (title, status) => (
     <div style={{ marginBottom: "25px" }}>
       <h2>{title}</h2>
 
-      {getJobsByStatus(status).map((job, index) => (
+      {getJobsByStatus(status).map((job) => (
         <JobCard
-          key={index}
+          key={job._id}
           job={job}
-          index={index}
           handleDelete={handleDelete}
           handleStatusChange={handleStatusChange}
         />
@@ -61,30 +58,30 @@ export default function Dashboard({ jobs, setJobs }) {
   return (
     <div style={{ maxWidth: "700px", margin: "auto" }}>
       <h1>Job Dashboard</h1>
-       {/*Search+filter UI*/}
+
+      {/* SEARCH + FILTER */}
       <div style={{ marginBottom: "20px" }}>
-          <input
+        <input
           type="text"
           placeholder="Search company..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={{ marginRight: "10px" }}
         />
-        {/*Filter*/}
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
+
+        <select value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option value="All">All</option>
           <option value="Applied">Applied</option>
           <option value="Interview">Interview</option>
           <option value="Offer">Offer</option>
           <option value="Rejected">Rejected</option>
         </select>
-
       </div>
-      {/*Empty state*/}
-      {jobs.length === 0 ? (
+
+      {/* LOADING STATE */}
+      {loading ? (
+        <p>Loading jobs...</p>
+      ) : jobs.length === 0 ? (
         <p>No jobs added yet</p>
       ) : (
         <>
