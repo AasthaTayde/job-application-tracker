@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const job = await Job.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+      new: true,//return updated document
     });
     res.json(job);
   } catch (err) {

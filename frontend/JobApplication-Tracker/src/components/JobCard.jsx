@@ -12,7 +12,7 @@ export default function JobCard({ job, index, handleDelete, handleStatusChange }
   
         <select
           value={job.status}
-          onChange={(e) => handleStatusChange(index, e.target.value)}
+          onChange={(e) => handleStatusChange(job._id, e.target.value)}
         >
           <option>Applied</option>
           <option>Interview</option>

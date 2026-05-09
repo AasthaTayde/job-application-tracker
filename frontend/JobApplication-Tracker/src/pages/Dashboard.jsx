@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { deleteJob } from "../api/jobs";
+import { updateJob } from "../api/jobs";
 import JobCard from "../components/JobCard";
 
 export default function Dashboard({ jobs, setJobs, loading }) {
@@ -22,13 +23,20 @@ export default function Dashboard({ jobs, setJobs, loading }) {
   };
 
   // 🔥 UPDATE status using id
-  const handleStatusChange = (id, newStatus) => {
-    const updatedJobs = jobs.map((job) =>
-      job._id === id ? { ...job, status: newStatus } : job
-    );
-    setJobs(updatedJobs);
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const res = await updateJob(id, { status: newStatus });
+  
+      setJobs((prev) =>
+        prev.map((job) =>
+          job._id === id ? res.data : job
+        )
+      );
+  
+    } catch (error) {
+      console.log("Update error:", error);
+    }
   };
-
   // 🔍 SEARCH
   const getSearchedJobs = () => {
     return jobs.filter((job) =>
