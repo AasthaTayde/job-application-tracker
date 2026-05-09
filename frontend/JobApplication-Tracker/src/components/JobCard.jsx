@@ -22,7 +22,7 @@ export default function JobCard({ job, index, handleDelete, handleStatusChange }
   
         <p>{job.date}</p>
   
-        <button onClick={() => handleDelete(index)}>
+        <button onClick={() => handleDelete(job._id)}>
           Delete
         </button>
       </div>

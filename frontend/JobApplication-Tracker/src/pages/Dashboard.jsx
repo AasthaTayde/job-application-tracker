@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { deleteJob } from "../api/jobs";
 import JobCard from "../components/JobCard";
 
 export default function Dashboard({ jobs, setJobs, loading }) {
@@ -7,9 +8,17 @@ export default function Dashboard({ jobs, setJobs, loading }) {
   const [filter, setFilter] = useState("All");
 
   // 🔥 DELETE using MongoDB id (NOT index)
-  const handleDelete = (id) => {
-    const updatedJobs = jobs.filter((job) => job._id !== id);
-    setJobs(updatedJobs);
+  const handleDelete = async (id) => {
+    try {
+      // 🔥 Delete from backend (MongoDB)
+      await deleteJob(id);
+  
+      // 🔥 Remove from frontend state
+      setJobs((prev) => prev.filter((job) => job._id !== id));
+  
+    } catch (error) {
+      console.log("Error deleting job:", error);
+    }
   };
 
   // 🔥 UPDATE status using id
