@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const jobSchema = new mongoose.Schema(
   {
     user: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,//stores the mongodb id of the user who owns the job
       ref: "User",
       required: true,
       index: true,

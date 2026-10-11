@@ -1,11 +1,11 @@
 
-require("dotenv").config();
+require("dotenv").config();//loads environment variable from your .env file into process.env
 
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
+const express = require("express");//imports express to create backend server and http requests.
+const cors = require("cors");//Allows react frontend to make requests to backend even when they have different origin
+const cookieParser = require("cookie-parser");//parse cookies into req.cookies
 
-const connectDB = require("./config/db");
+const connectDB = require("./config/db");//imports function that establishes the MongoDB connection.
 
 const jobRoutes = require("./routes/JobRoutes");
 const matcherRoutes = require("./routes/MatcherRoutes");
@@ -13,7 +13,8 @@ const authRoutes = require("./routes/AuthRoutes");
 
 const app = express();
 
-// Middleware
+// Middlewares
+//1
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
@@ -21,10 +22,12 @@ app.use(
   })
 );
 
-app.use(express.json());
+//2
+app.use(express.json());//parses incoming json request so controller can access it using req.body.
+//3
 app.use(cookieParser());
 
-// API routes
+//  registering API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/matcher", matcherRoutes);

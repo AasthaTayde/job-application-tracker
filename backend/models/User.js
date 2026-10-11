@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true,
+      trim: true,//remove whitespaces from the begin and end of a string
       maxlength: 80,
     },
     email: {

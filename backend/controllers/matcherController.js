@@ -1,6 +1,6 @@
 
-const { PDFParse } = require("pdf-parse");
-const { GoogleGenAI } = require("@google/genai");
+const { PDFParse } = require("pdf-parse");//extracts readable text from the uploaded pdf
+const { GoogleGenAI } = require("@google/genai");//lets your backend send a prompt to googles gemini AI model and recieve a response
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,

@@ -1,16 +1,16 @@
 
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const bcrypt = require("bcryptjs");//to hash password during registeration and compares during login
+const jwt = require("jsonwebtoken");//creates JWTs that backend can verify on later requests
+const User = require("../models/User");//creating users and searching for them in MongoDB
 
-const cookieOptions = {
-  httpOnly: true,
-  sameSite: "lax",
-  secure: process.env.NODE_ENV === "production",
+const cookieOptions = {//control how the browser handles the cookie containig in your jwt
+  httpOnly: true,//prevent frontend js from reading the cookie directly
+  sameSite: "lax",//restricts when the browser sends the cookie in cross site requests
+  secure: process.env.NODE_ENV === "production",//sets the cookie lifetime to 7 days , measured in miliseconds
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
-function createToken(userId) {
+function createToken(userId) {//creates a JWT
   return jwt.sign({ userId }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
@@ -60,7 +60,7 @@ exports.register = async (req, res) => {
       password: hashedPassword,
     });
 
-    res.cookie(
+    res.cookie(//create the session cookie
       "token",
       createToken(user._id.toString()),
       cookieOptions
@@ -101,7 +101,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    res.cookie(
+    res.cookie(//create the session cookie
       "token",
       createToken(user._id.toString()),
       cookieOptions
